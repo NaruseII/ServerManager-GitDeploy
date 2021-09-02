@@ -6,6 +6,7 @@ import fr.naruse.servermanager.core.plugin.SMPlugin;
 import fr.naruse.servermanager.core.utils.Utils;
 import org.eclipse.jgit.api.CloneCommand;
 import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.PullCommand;
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 
 import java.io.File;
@@ -33,8 +34,8 @@ public class GitDeployTask {
         LOGGER.debug("Template folder URL is '"+templateFolderUrl+"'");
         File templateFolder = new File(templateFolderUrl);
 
-        boolean checkout = new File(templateFolder, ".git").exists();
-        if(!checkout){
+        boolean pull = new File(templateFolder, ".git").exists();
+        if(!pull){
             Utils.delete(templateFolder);
             LOGGER.info(".git not found! Cloning...");
         }else{
@@ -52,11 +53,13 @@ public class GitDeployTask {
 
         LOGGER.info("Downloading...");
         try {
-            if(checkout){
-                 Git.open(templateFolder)
-                         .checkout()
-                         .setName(branch)
-                         .call();
+            if(pull){
+                PullCommand pullCommand = Git.open(templateFolder)
+                         .pull();
+                if(useCredentials){
+                    pullCommand = pullCommand.setCredentialsProvider(new UsernamePasswordCredentialsProvider(username, password));
+                }
+                pullCommand.call();
             }else{
                 CloneCommand cloneCommand = Git.cloneRepository()
                         .setURI(url)
