@@ -1,0 +1,10 @@
+{
+  "enabled": false,
+  "url": "https://github.com/username/RepoName.git",
+  "branch": "master",
+  "credentials": {
+    "enabled": false,
+    "username": "username",
+    "password": "password"
+  }
+}

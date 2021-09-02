@@ -1,0 +1,4 @@
+{
+  "main": "fr.naruse.servermanager.gitdeploy.main.GitDeployPlugin",
+  "name": "GitDeploy"
+}
